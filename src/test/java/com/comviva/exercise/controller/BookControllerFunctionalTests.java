@@ -4,6 +4,7 @@ import com.comviva.exercise.controller.request.AddBookRequest;
 import com.comviva.exercise.controller.request.AddStudentRequest;
 import com.comviva.exercise.controller.request.IssueBookRequest;
 import com.comviva.exercise.entiry.Book;
+import com.comviva.exercise.entiry.IssuedBooks;
 import com.comviva.exercise.utils.APICall;
 import com.comviva.exercise.utils.BaseTest;
 import com.comviva.exercise.utils.DefaultData;
@@ -88,13 +89,13 @@ public class BookControllerFunctionalTests extends BaseTest {
 
         //When
         IssueBookRequest issueBookRequest = DefaultData.getIssueBookRequest(
-                addStudentRequest.getStudentId(),
+                addStudentRequest.getClass().getName(),
                 //
                 bookId
 
         );
 
-        Response response = APICall.addBook(new AddBookRequest(bookId,bookName))
+        Response response = APICall.addBook(new AddBookRequest(bookId,bookName));
 
         Assert.assertEquals(200,response.getStatusCode());
 
@@ -110,6 +111,20 @@ public class BookControllerFunctionalTests extends BaseTest {
     @Test
     public void issueBook(){
 
+        String bookId = UUID.randomUUID().toString();
+        String ibsn10 = getRandomNumber();
+        String bookName = "Harry Potter part 2";
+        AddBookRequest bookRequest = DefaultData.getBookRequest(ibsn10,bookId);
+        APICall.addBook(bookRequest);
+
+
+        String studentId = UUID.randomUUID().toString();
+        String email = "admin@admin.com";
+        String msisdn =getRandomNumber();
+        AddStudentRequest addStudentRequest = DefaultData.getAdminRequest(msisdn,email,studentId);
+        APICall.addStudent(addStudentRequest);
+
+        IssuedBooks issuedBooks = DefaultData.getIssueBookRequest(bookId,bookName)
     }
 
 
